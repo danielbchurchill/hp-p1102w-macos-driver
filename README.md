@@ -13,6 +13,11 @@ in HP/Zenographics **ZjStream** format. Generic drivers can't do that.
 test page prints at the correct scale (2.00 × 2.00 in reference square), and
 every step of the gray ramp is distinct.
 
+> **Printing over Wi-Fi? You may not need this driver at all.** On the network,
+> the P1102w (firmware 2013-07-03) supports AirPrint, so any Mac, Intel or Apple
+> Silicon, can add it with no driver. This repo also includes a tool that puts
+> the printer on Wi-Fi from a Mac over USB. See [Wi-Fi and AirPrint](#wi-fi-and-airprint).
+
 ## How it works
 
 ```
@@ -82,6 +87,72 @@ that use it.
 On the test page, the square must measure exactly **2.00 × 2.00 in**. If it
 comes out half or double width, the resolution is wrong.
 
+## Wi-Fi and AirPrint
+
+The USB connection only accepts ZjStream, which is why the driver above exists.
+The network side is different: our P1102w, on firmware 2013-07-03, advertises
+**AirPrint** over Bonjour (`_ipp._tcp` with the `_universal` subtype,
+`pdl=image/urf`, `URF=…RS600,W8…`). macOS sends it pages in Apple's URF raster
+format and the printer handles the rest. Printers on older firmware may not
+offer this. `./wifi-setup.py status` shows your firmware date.
+
+### Put the printer on Wi-Fi from a Mac
+
+HP's wireless setup normally needs its Windows installer, WPS, or the printer's
+"Wireless Direct" hotspot. None of those are needed here. Besides its print
+interface, the printer has a second USB interface named **"HP EWS"** (class
+`ff/02/10`) that carries plain HTTP to its Embedded Web Server, the printer's
+built-in settings website. `wifi-setup.py` submits that site's own wireless
+form over the cable.
+
+Requirements: Homebrew `libusb` and a USB connection. The printer only supports
+2.4 GHz networks.
+
+```sh
+brew install libusb
+make wifi                  # builds build/ews-usb
+./wifi-setup.py status     # radio state, network, IP address, firmware
+./wifi-setup.py scan       # networks the printer can see
+./wifi-setup.py join       # turn the radio on, pick a network, enter the password
+./wifi-setup.py join --ssid "MyNetwork" --dry-run   # show the request, password redacted
+```
+
+`join` turns the radio on if it's off, scans, and submits the network name and
+WPA/WPA2 password. It then waits until the printer reports a connection and an
+IP address. The password is read without echo in Terminal, or from a hidden
+macOS dialog when there's no terminal. It's piped to `ews-usb` on stdin and
+never written to disk or passed on a command line. Open networks work too;
+WEP isn't supported.
+
+The printer keeps its Wi-Fi settings across power cycles.
+
+### Add it on any Mac
+
+Once it's on Wi-Fi, open **System Settings › Printers & Scanners › Add Printer,
+Scanner or Fax…**, choose **HP LaserJet Professional P 1102w** and keep
+**Use: AirPrint**. No driver is involved. Macs find it by its Bonjour name, so a
+changed IP address doesn't matter.
+
+### Notes
+
+- **Wireless Direct:** the printer can also broadcast an open hotspot,
+  `HP-Print-xx-LaserJet 1102`. It was off on our unit and `wifi-setup.py` leaves
+  it alone. Check under **Networking › Wireless Direct Setup** at
+  `http://<printer-ip>/`.
+- **No admin password by default:** anyone on your network can change the
+  printer's settings from its web page. You can set a password under
+  **Networking › Password**.
+- **HP's LEDM API doesn't work for this:** HPLIP's request for turning the radio
+  on (`PUT /IoMgmt/Adapters/wifi0`) returns `405 Method Not Allowed` on this
+  model, which is why the tool drives the web form instead. The LEDM read
+  endpoints (`/IoMgmt/Adapters`, `…/wifi0/WifiNetworks`,
+  `/DevMgmt/IOConfigDyn.xml`) work and are what `status` and `scan` use.
+- **Stuck channel:** keep request bodies small. A 10 KB body sent to a
+  nonexistent URL wedged the USB web channel until the printer restarted itself,
+  about 30 seconds later, with its settings intact. `ews-usb` now refuses bodies
+  over 2 KB. If requests ever time out, run `build/ews-usb -R /IoMgmt/Adapters`
+  or turn the printer off and on.
+
 ## Print dialog options
 
 - **Paper size:** Letter, Legal, Executive, A4, A5, A6, JIS B5, Envelope #10 / DL / C5 / Monarch, Postcard
@@ -135,6 +206,8 @@ and their PPD `*Product` and `1284DeviceID` lines would need adding.
 | `vendor/foo2zjs/` | Unmodified subset of upstream foo2zjs (see [`UPSTREAM.md`](vendor/foo2zjs/UPSTREAM.md)) |
 | `tools/make_testpage.py` | Test page generator (Python standard library only) |
 | `install.sh`, `uninstall.sh` | System install and removal |
+| `wifi-setup.py` | Wi-Fi status, scan and join over USB |
+| `tools/ews-usb.c` | HTTP client for the printer's EWS-over-USB interface (libusb) |
 
 ## Sources and credits
 
@@ -158,6 +231,13 @@ and their PPD `*Product` and `1284DeviceID` lines would need adding.
 - **[faradayfury/printer-all PR #3](https://github.com/faradayfury/printer-all/pull/3).**
   "Fixes for HP LaserJet Pro P1102", explaining why the P1102 needs `-P` and
   `MX = 0`.
+- **[HPLIP `base/LedmWifi.py`](https://github.com/dannetstudio/hplip-python3.12/blob/main/base/LedmWifi.py)**
+  (HP's Linux imaging and printing project, via a mirror). Source of the LEDM
+  Wi-Fi resource names: `/IoMgmt/Adapters`, `…/WifiNetworks` (with its
+  `202 Accepted` "scan in progress" reply), `…/Profiles/Active`, and hex-encoded
+  SSIDs. It also showed that HPLIP reaches Marvell-based printers like this one
+  through a separate "EWS" USB channel. The web-form fields `wifi-setup.py`
+  submits come from the printer's own `/SSI/Auth/ip_wireless.htm` page.
 - **[HP Support Community: P1102w driver for macOS Sequoia](https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/HP-LaserJet-Pro-P1102w-printer-driver-for-macOS-Sequoia-15-1/td-p/9248220)**
   and
   **[P1102 not working with new macOS](https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/HP-LaserJet-P1102-not-working-with-new-MacOS/td-p/9237883).**

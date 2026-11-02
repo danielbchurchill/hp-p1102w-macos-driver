@@ -7,6 +7,14 @@ PPD     := ppd/HP-LaserJet-P1102w-ZJS.ppd
 
 all: $(B)/foo2zjs $(B)/rastertozjs $(B)/zjsdecode
 
+# Optional Wi-Fi setup helper (needs Homebrew libusb: brew install libusb).
+LIBUSB  := $(shell brew --prefix libusb 2>/dev/null)
+wifi: $(B)/ews-usb
+
+$(B)/ews-usb: tools/ews-usb.c | $(B)
+	@[ -f "$(LIBUSB)/include/libusb-1.0/libusb.h" ] || { echo "libusb not found: brew install libusb"; exit 1; }
+	$(CC) -O2 -Wall -Wextra -I$(LIBUSB)/include/libusb-1.0 -o $@ $< -L$(LIBUSB)/lib -lusb-1.0
+
 $(B):
 	mkdir -p $(B)
 
@@ -36,4 +44,4 @@ test: all
 clean:
 	rm -rf $(B)
 
-.PHONY: all test clean
+.PHONY: all wifi test clean
