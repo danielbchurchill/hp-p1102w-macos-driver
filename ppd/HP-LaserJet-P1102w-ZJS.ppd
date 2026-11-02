@@ -1,0 +1,139 @@
+*PPD-Adobe: "4.3"
+*% HP LaserJet Professional P1102w - native macOS driver (no Ghostscript)
+*% Pipeline: PDF -> cgpdftoraster (macOS) -> rastertozjs -> foo2zjs -> ZjStream
+*% foo2zjs is GPL-2.0-or-later, (c) Rick Richardson.
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "P1102WZJ.PPD"
+*Manufacturer: "HP"
+*Product: "(HP LaserJet Professional P1102w)"
+*Product: "(HP LaserJet Professional P1102)"
+*ModelName: "HP LaserJet Professional P1102w"
+*ShortNickName: "HP LaserJet P1102w ZjStream"
+*NickName: "HP LaserJet Professional P1102w (ZjStream native)"
+*1284DeviceID: "MFG:Hewlett-Packard;MDL:HP LaserJet Professional P1102w;CMD:ZJS,PJL;"
+*PSVersion: "(3010.000) 0"
+*LanguageLevel: "3"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*FileSystem: False
+*Throughput: "18"
+*LandscapeOrientation: Plus90
+*TTRasterizer: Type42
+*cupsVersion: 1.4
+*cupsModelNumber: 2
+*cupsManualCopies: True
+*cupsFilter: "application/vnd.cups-raster 0 /Library/Printers/HP_P1102w_ZJS/filter/rastertozjs"
+*cupsLanguages: "en"
+
+*% The engine is driven at 1200x600 (as upstream foo2zjs does for this model).
+*% 8-bit gray from CoreGraphics; rastertozjs halftones it to 1 bit.
+*OpenUI *Resolution/Resolution: PickOne
+*OrderDependency: 10 AnySetup *Resolution
+*DefaultResolution: 1200x600dpi
+*Resolution 1200x600dpi/1200 x 600 dpi: "<</HWResolution[1200 600]/cupsBitsPerColor 8/cupsColorOrder 0/cupsColorSpace 18>>setpagedevice"
+*CloseUI: *Resolution
+
+*OpenUI *PageSize/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*DefaultPageSize: Letter
+*PageSize Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageSize Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*PageSize Executive/Executive: "<</PageSize[522 756]/ImagingBBox null>>setpagedevice"
+*PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*PageSize A5/A5: "<</PageSize[420 595]/ImagingBBox null>>setpagedevice"
+*PageSize A6/A6: "<</PageSize[297 420]/ImagingBBox null>>setpagedevice"
+*PageSize B5/JIS B5: "<</PageSize[516 729]/ImagingBBox null>>setpagedevice"
+*PageSize Env10/Envelope #10: "<</PageSize[297 684]/ImagingBBox null>>setpagedevice"
+*PageSize EnvDL/Envelope DL: "<</PageSize[312 624]/ImagingBBox null>>setpagedevice"
+*PageSize EnvC5/Envelope C5: "<</PageSize[459 649]/ImagingBBox null>>setpagedevice"
+*PageSize EnvMonarch/Envelope Monarch: "<</PageSize[279 540]/ImagingBBox null>>setpagedevice"
+*PageSize Postcard/Postcard: "<</PageSize[283 420]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*DefaultPageRegion: Letter
+*PageRegion Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageRegion Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*PageRegion Executive/Executive: "<</PageSize[522 756]/ImagingBBox null>>setpagedevice"
+*PageRegion A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*PageRegion A5/A5: "<</PageSize[420 595]/ImagingBBox null>>setpagedevice"
+*PageRegion A6/A6: "<</PageSize[297 420]/ImagingBBox null>>setpagedevice"
+*PageRegion B5/JIS B5: "<</PageSize[516 729]/ImagingBBox null>>setpagedevice"
+*PageRegion Env10/Envelope #10: "<</PageSize[297 684]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvDL/Envelope DL: "<</PageSize[312 624]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvC5/Envelope C5: "<</PageSize[459 649]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvMonarch/Envelope Monarch: "<</PageSize[279 540]/ImagingBBox null>>setpagedevice"
+*PageRegion Postcard/Postcard: "<</PageSize[283 420]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+
+*% Printable area: the engine clips 0.16in on every edge; 12pt keeps content inside.
+*DefaultImageableArea: Letter
+*ImageableArea Letter: "12 12 600 780"
+*ImageableArea Legal: "12 12 600 996"
+*ImageableArea Executive: "12 12 510 744"
+*ImageableArea A4: "12 12 583 830"
+*ImageableArea A5: "12 12 408 583"
+*ImageableArea A6: "12 12 285 408"
+*ImageableArea B5: "12 12 504 717"
+*ImageableArea Env10: "12 12 285 672"
+*ImageableArea EnvDL: "12 12 300 612"
+*ImageableArea EnvC5: "12 12 447 637"
+*ImageableArea EnvMonarch: "12 12 267 528"
+*ImageableArea Postcard: "12 12 271 408"
+
+*DefaultPaperDimension: Letter
+*PaperDimension Letter: "612 792"
+*PaperDimension Legal: "612 1008"
+*PaperDimension Executive: "522 756"
+*PaperDimension A4: "595 842"
+*PaperDimension A5: "420 595"
+*PaperDimension A6: "297 420"
+*PaperDimension B5: "516 729"
+*PaperDimension Env10: "297 684"
+*PaperDimension EnvDL: "312 624"
+*PaperDimension EnvC5: "459 649"
+*PaperDimension EnvMonarch: "279 540"
+*PaperDimension Postcard: "283 420"
+
+*% Options below are read by rastertozjs from the job options, not by the RIP.
+*OpenUI *MediaType/Paper Type: PickOne
+*OrderDependency: 20 AnySetup *MediaType
+*DefaultMediaType: Plain
+*MediaType Plain/Plain: ""
+*MediaType Light/Light (60-74 g/m2): ""
+*MediaType Recycled/Recycled: ""
+*MediaType Cardstock/Heavy / Cardstock: ""
+*MediaType Rough/Rough: ""
+*MediaType Labels/Labels: ""
+*MediaType Envelope/Envelope: ""
+*MediaType Transparency/Transparency: ""
+*MediaType Letterhead/Letterhead: ""
+*MediaType Preprinted/Preprinted: ""
+*MediaType Prepunched/Prepunched: ""
+*CloseUI: *MediaType
+
+*OpenUI *PrintDensity/Print Density: PickOne
+*OrderDependency: 20 AnySetup *PrintDensity
+*DefaultPrintDensity: 3
+*PrintDensity 1/1 (Lightest): ""
+*PrintDensity 2/2: ""
+*PrintDensity 3/3 (Normal): ""
+*PrintDensity 4/4: ""
+*PrintDensity 5/5 (Darkest): ""
+*CloseUI: *PrintDensity
+
+*OpenUI *EconoMode/Toner Saver: Boolean
+*OrderDependency: 20 AnySetup *EconoMode
+*DefaultEconoMode: False
+*EconoMode True/On: ""
+*EconoMode False/Off: ""
+*CloseUI: *EconoMode
+
+*DefaultFont: Courier
+*Font Courier: Standard "(002.004S)" Standard ROM
+*Font Helvetica: Standard "(001.006S)" Standard ROM
+*Font Times-Roman: Standard "(001.007S)" Standard ROM
