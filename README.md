@@ -9,9 +9,14 @@ releases don't include one. The printer is *host-based*: it has no PostScript
 or PCL interpreter, so the Mac must render every page to a bitmap and send it
 in HP/Zenographics **ZjStream** format. Generic drivers can't do that.
 
-**Status:** tested on macOS 27.0.1 (Apple Silicon) with a P1102w over USB. The
-test page prints at the correct scale (2.00 × 2.00 in reference square), and
-every step of the gray ramp is distinct.
+**Status:** tested on real hardware with a P1102w (firmware 2013-07-03):
+
+| Connection | Mac | Method | Result |
+|---|---|---|---|
+| USB | macOS 27.0.1, Apple Silicon | This driver | Test page correct: 2.00 × 2.00 in reference square, every gray step distinct |
+| Wi-Fi | macOS 27.0.1, Apple Silicon | AirPrint, no driver | Test page printed well |
+| Wi-Fi | Intel Mac | AirPrint, no driver | Printed successfully |
+| Wi-Fi setup over USB | macOS 27.0.1, Apple Silicon | The requests `wifi-setup.py join` sends, plus `status` and `scan` | Radio enabled, joined a WPA2 network, got a DHCP address |
 
 > **Printing over Wi-Fi? You may not need this driver at all.** On the network,
 > the P1102w (firmware 2013-07-03) supports AirPrint, so any Mac, Intel or Apple
@@ -131,7 +136,8 @@ The printer keeps its Wi-Fi settings across power cycles.
 Once it's on Wi-Fi, open **System Settings › Printers & Scanners › Add Printer,
 Scanner or Fax…**, choose **HP LaserJet Professional P 1102w** and keep
 **Use: AirPrint**. No driver is involved. Macs find it by its Bonjour name, so a
-changed IP address doesn't matter.
+changed IP address doesn't matter. Tested from both an Apple Silicon Mac and an
+Intel Mac.
 
 ### Notes
 
